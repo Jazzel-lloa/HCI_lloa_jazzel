@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex University — Student Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+          <span class="brand-name">Apex Portal</span>
+          <span class="brand-term">Fall 2026</span>
+        </div>
+      </div>
+
+      <nav class="nav-list" aria-label="Primary Navigation">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">◫</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="schedule">
+          <span class="nav-icon">◷</span>
+          <span>Class Schedule</span>
+        </button>
+        <button class="nav-item" data-view="grades">
+          <span class="nav-icon">◈</span>
+          <span>Grades & GPA</span>
+        </button>
+        <button class="nav-item" data-view="announcements">
+          <span class="nav-icon">◉</span>
+          <span>Announcements</span>
+          <span class="badge" id="unreadCount">2</span>
+        </button>
+        <button class="nav-item" data-view="profile">
+          <span class="nav-icon">◎</span>
+          <span>Student Profile</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="mini-profile" id="sidebarProfile">
+          <div class="avatar" id="sidebarAvatar">MC</div>
+          <div class="mini-meta">
+            <strong id="sidebarName">Maya Chen</strong>
+            <span id="sidebarId">ID: 20240891</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn mobile-menu-btn" id="menuToggle" aria-label="Toggle Menu">☰</button>
+          <div>
+            <h1 id="pageTitle">Dashboard</h1>
+            <p class="subtitle" id="pageSubtitle">Welcome back — here is your academic snapshot.</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <input
+            type="search"
+            id="globalSearch"
+            class="search-input"
+            placeholder="Search courses or notices..."
+            aria-label="Search courses or notices"
+          />
+        </div>
+      </header>
+
+      <main class="content" id="appContent">
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view active">
+          <div class="stats-grid">
+            <article class="card stat-card">
+              <span class="stat-label">Cumulative GPA</span>
+              <strong class="stat-value" id="statGpa">3.84</strong>
+              <span class="stat-trend positive">+0.06 from Spring</span>
+            </article>
+            <article class="card stat-card">
+              <span class="stat-label">Enrolled Credits</span>
+              <strong class="stat-value" id="statCredits">16</strong>
+              <span class="stat-trend">4 Active Courses</span>
+            </article>
+            <article class="card stat-card">
+              <span class="stat-label">Next Class</span>
+              <strong class="stat-value" id="statNextClass">CS 302</strong>
+              <span class="stat-trend" id="statNextClassTime">Today · 2:00 PM · Room 4B</span>
+            </article>
+            <article class="card stat-card">
+              <span class="stat-label">Attendance Rate</span>
+              <strong class="stat-value" id="statAttendance">96%</strong>
+              <span class="stat-trend positive">On track</span>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="card">
+              <div class="card-header">
+                <h2>Today's Classes</h2>
+                <button class="link-btn" data-jump="schedule">Full schedule →</button>
+              </div>
+              <div id="dashboardTodayList" class="stack-list"></div>
+            </article>
+
+            <article class="card">
+              <div class="card-header">
+                <h2>Recent Announcements</h2>
+                <button class="link-btn" data-jump="announcements">All notices →</button>
+              </div>
+              <div id="dashboardNoticesList" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <!-- CLASS SCHEDULE VIEW -->
+        <section id="view-schedule" class="view">
+          <div class="toolbar">
+            <div class="filter-pills" id="dayFilters">
+              <button class="pill active" data-day="ALL">All Days</button>
+              <button class="pill" data-day="Mon">Mon</button>
+              <button class="pill" data-day="Tue">Tue</button>
+              <button class="pill" data-day="Wed">Wed</button>
+              <button class="pill" data-day="Thu">Thu</button>
+              <button class="pill" data-day="Fri">Fri</button>
+            </div>
+          </div>
+          <div class="table-wrap card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Title</th>
+                  <th>Days</th>
+                  <th>Time</th>
+                  <th>Location</th>
+                  <th>Instructor</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- GRADES VIEW -->
+        <section id="view-grades" class="view">
+          <div class="grade-summary card">
+            <div>
+              <span class="stat-label">Term Standing</span>
+              <h2 id="termStandingTitle">Dean's List Eligibility</h2>
+              <p class="muted">Calculated dynamically from current course weights and scores.</p>
+            </div>
+            <div class="gpa-pill">
+              <span>Term GPA</span>
+              <strong id="computedGpa">3.84</strong>
+            </div>
+          </div>
+
+          <div id="gradesList" class="grades-grid"></div>
+        </section>
+
+        <!-- ANNOUNCEMENTS VIEW -->
+        <section id="view-announcements" class="view">
+          <div class="toolbar">
+            <div class="filter-pills" id="categoryFilters">
+              <button class="pill active" data-cat="ALL">All</button>
+              <button class="pill" data-cat="Academic">Academic</button>
+              <button class="pill" data-cat="Campus">Campus</button>
+              <button class="pill" data-cat="Events">Events</button>
+            </div>
+            <button class="btn btn-secondary" id="markAllReadBtn">Mark all as read</button>
+          </div>
+          <div id="announcementsList" class="stack-list"></div>
+        </section>
+
+        <!-- STUDENT PROFILE VIEW -->
+        <section id="view-profile" class="view">
+          <div class="profile-layout">
+            <article class="card profile-hero">
+              <div class="avatar avatar-lg" id="profileAvatar">MC</div>
+              <h2 id="profileDisplayName">Maya Chen</h2>
+              <p class="muted" id="profileProgram">B.S. Computer Science · Junior Year</p>
+              <div class="meta-chips">
+                <span class="chip" id="profileStudentId">ID: 20240891</span>
+                <span class="chip" id="profileAdvisor">Advisor: Dr. R. Vance</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-header">
+                <h2>Contact & Preferences</h2>
+                <span class="muted small">Saved locally in browser</span>
+              </div>
+              <form id="profileForm" class="form-grid">
+                <label class="field">
+                  <span>Full Name</span>
+                  <input type="text" id="inputName" required />
+                </label>
+                <label class="field">
+                  <span>University Email</span>
+                  <input type="email" id="inputEmail" required />
+                </label>
+                <label class="field">
+                  <span>Phone Number</span>
+                  <input type="tel" id="inputPhone" />
+                </label>
+                <label class="field">
+                  <span>Dorm / Residence</span>
+                  <input type="text" id="inputResidence" />
+                </label>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <button type="button" class="btn btn-ghost" id="resetDemoBtn">Reset Demo Data</button>
+                </div>
+                <p class="save-status" id="saveStatus" aria-live="polite"></p>
+              </form>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
